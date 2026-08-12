@@ -1,14 +1,21 @@
 :root{
-  --ink:#0A0A0A;          /* page background */
-  --ink-2:#141414;        /* flap liner */
-  --paper:#FCF8F1;        /* note / envelope highlight */
+  --ink:#0A0A0A;
+  --ink-2:#141414;
+
+  --paper:#FCF8F1;
   --paper-2:#F2EADD;
   --paper-3:#E1D5C0;
-  --paper-4:#CFC0A6;
-  --gold:#B99B6B;
-  --gold-2:#8C7346;
-  --mute:#8B857B;         /* secondary text on black */
-  --ink-text:#3A342B;     /* text on paper */
+  --paper-back:#EFE7D9;   /* envelope interior — light, so the folded
+                             side flaps read as paper, not as a hole */
+  --paper-back-2:#E4DAC7;
+
+  --gold:#B99B6B;         /* decorative marks only — never body text */
+  --gold-ink:#6B5433;     /* small gold text on paper — 5.98:1 */
+
+  --on-dark:#F0EBE1;      /* primary text on black — 16.7:1 */
+  --mute:#A9A296;         /* secondary text on black — 6.95:1 */
+  --on-band:#E5DFD4;      /* text over the scrimmed lace band — 8.98:1 */
+  --ink-text:#3A342B;     /* text on paper — 10.3:1 */
 
   --display:"Playfair Display", Georgia, "Times New Roman", serif;
   --body:"Cormorant Garamond", Georgia, serif;
@@ -17,10 +24,9 @@
   --foil:linear-gradient(100deg,#6E5836 0%,#E6CB93 20%,#B08F5E 38%,#F2E1BB 54%,#8C7346 74%,#D3B888 100%);
   --ease:cubic-bezier(.16,.84,.30,1);
 
-  /* envelope geometry — the three numbers worth experimenting with */
   --env-w:min(332px, 80vw);
-  --env-h:calc(var(--env-w) / 1.45);   /* 1.45 is the aspect ratio */
-  --flap-h:58%;                        /* flap depth */
+  --env-h:calc(var(--env-w) / 1.45);
+  --flap-h:58%;
 }
 
 *{box-sizing:border-box; margin:0; padding:0}
@@ -28,8 +34,9 @@
 body{
   min-height:100svh;
   background:var(--ink);
-  color:var(--paper);
+  color:var(--on-dark);
   font-family:var(--body);
+  font-size:16px;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -39,7 +46,6 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-/* a pool of warm light for the envelope to sit in */
 body::before{
   content:"";
   position:fixed; inset:0;
@@ -54,7 +60,6 @@ body::before{
    SHARED TEXTURES
    ============================================================ */
 
-/* paper grain — add class="grain" to any ivory surface */
 .grain::after{
   content:"";
   position:absolute; inset:0;
@@ -64,7 +69,9 @@ body::before{
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='0.55'/></svg>");
 }
 
-/* gold foil — a gradient clipped to the glyphs, so it reflects */
+/* Foil is reserved for marks — the monogram and the seal.
+   WCAG 1.4.3 exempts logotypes from contrast requirements;
+   it must never carry information a guest needs to read. */
 .foil{
   background:var(--foil);
   -webkit-background-clip:text;
@@ -72,7 +79,6 @@ body::before{
   color:transparent;
 }
 
-/* letterpress — type pressed into the paper rather than printed on it */
 .press{
   text-shadow:0 1px 0 rgba(255,255,255,.9), 0 -1px 0 rgba(0,0,0,.14);
 }
@@ -87,17 +93,18 @@ body::before{
   transition:opacity .7s ease, transform .9s var(--ease);
 }
 .eyebrow{
-  font-size:.7rem;
-  letter-spacing:.36em;
+  font-size:.875rem;        /* 14px */
+  letter-spacing:.24em;
   text-transform:uppercase;
   color:var(--mute);
-  margin-bottom:18px;
+  margin-bottom:20px;
 }
 .intro-names{
   font-family:var(--display);
   font-style:italic;
   font-weight:400;
   font-size:clamp(2rem, 9vw, 2.9rem);
+  color:var(--on-dark);
   margin-bottom:40px;
 }
 .is-open .intro{
@@ -128,7 +135,6 @@ body::before{
   padding:0;
   cursor:pointer;
   transform-style:preserve-3d;
-  /* two shadows: a tight contact one, a wide ambient one */
   filter:
     drop-shadow(0 2px 2px rgba(0,0,0,.55))
     drop-shadow(0 30px 44px rgba(0,0,0,.60));
@@ -136,23 +142,24 @@ body::before{
 .envelope:focus-visible{outline:1px solid var(--gold); outline-offset:16px}
 .is-open .envelope{cursor:default}
 
-/* inside of the envelope */
 .back{
   position:absolute; inset:0;
   z-index:1;
   border-radius:2px;
-  background:linear-gradient(175deg, var(--paper-3), var(--paper-4));
+  background:linear-gradient(175deg, var(--paper-back), var(--paper-back-2));
 }
 
-/* ---------- the note ---------- */
+/* ---------- the note ----------
+   At rest it sits fully inside the envelope. Anything protruding
+   below puts cream behind the prompt text and destroys contrast. */
 .card{
   position:absolute;
   left:6%; width:88%;
-  top:-12%; height:112%;
+  top:2%; height:96%;
   z-index:2;
   background:linear-gradient(168deg, var(--paper) 0%, var(--paper-2) 100%);
   border-radius:1px;
-  transform:translateY(20%);
+  transform:translateY(0);
   transition:transform 1.5s var(--ease) .55s, opacity .7s ease;
   display:flex;
   align-items:center;
@@ -168,31 +175,28 @@ body::before{
   text-align:center;
   transition:opacity .8s ease 1.1s;
 }
-.is-open .card{transform:translateY(-74%)}
+.is-open .card{transform:translateY(-78%)}
 .is-open .card-inner{opacity:1}
 
-/* set by JS — the note passes in front of the opened flap */
 .card-lifted{z-index:5}
-/* set by JS — the note hands over to the details page */
-.card-out{opacity:0; transform:translateY(-80%) scale(1.06)}
+.card-out{opacity:0; transform:translateY(-84%) scale(1.06)}
 
-/* one mark only: the same monogram the details page opens with */
+/* a mark, not text — foil is allowed here */
 .card-mono{
   width:66px; height:66px;
   margin:0 auto;
-  border:1px solid rgba(140,115,70,.42);
+  border:1px solid rgba(107,84,51,.5);
   border-radius:50%;
   display:grid;
   place-items:center;
   font-family:var(--display);
   font-style:italic;
-  font-size:1rem;
+  font-size:1.125rem;
   letter-spacing:.04em;
 }
-/* alternative to the monogram */
 .card-script{
   font-family:var(--script);
-  font-size:2rem;
+  font-size:2.25rem;
   color:var(--ink-text);
 }
 
@@ -204,7 +208,6 @@ body::before{
   clip-path:polygon(0 28%, 50% 45%, 100% 28%, 100% 100%, 0 100%);
   border-radius:0 0 2px 2px;
 }
-/* the slot the note slips into falls away into shadow */
 .front::before{
   content:"";
   position:absolute; inset:0;
@@ -212,12 +215,14 @@ body::before{
   clip-path:polygon(0 28%, 50% 45%, 100% 28%, 100% 100%, 0 100%);
 }
 
-/* ---------- engraved crest ---------- */
+/* ---------- engraved crest ----------
+   The roman-numeral date came out. Three lines of type in a 40px
+   band could not be enlarged to a legible size without crowding. */
 .crest{
   position:absolute;
   z-index:4;
   left:0; right:0;
-  top:76%;
+  top:74%;
   text-align:center;
   transition:opacity .5s ease;
 }
@@ -225,28 +230,23 @@ body::before{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:8px;
-  margin-bottom:5px;
+  gap:9px;
+  margin-bottom:7px;
 }
-.crest-rule i{display:block; width:26px; height:1px; background:var(--gold); opacity:.5}
+.crest-rule i{display:block; width:24px; height:1px; background:var(--gold-ink); opacity:.55}
 .crest-rule b{
-  font-size:.42rem;
+  font-size:.5rem;
   font-weight:400;
-  color:var(--gold-2);
+  color:var(--gold-ink);
   transform:rotate(45deg);
   line-height:1;
 }
 .crest-name{
-  font-size:.56rem;
-  letter-spacing:.34em;
+  font-size:.875rem;        /* 14px, 4.9:1 on the paper beneath it */
+  letter-spacing:.2em;
   text-transform:uppercase;
   font-weight:500;
-}
-.crest-date{
-  font-size:.46rem;
-  letter-spacing:.3em;
-  color:var(--gold-2);
-  margin-top:4px;
+  color:var(--gold-ink);
 }
 .is-open .crest{opacity:0}
 
@@ -254,7 +254,7 @@ body::before{
 .flap{
   position:absolute;
   top:0; left:0;
-  width:100%;                 /* same width as the envelope — never wider */
+  width:100%;
   height:var(--flap-h);
   transform-origin:top center;
   transform-style:preserve-3d;
@@ -262,7 +262,6 @@ body::before{
   z-index:4;
 }
 .is-open .flap{transform:rotateX(-173deg)}
-/* set by JS once the flap is behind the envelope */
 .flap-lowered{z-index:1}
 
 .flap-face,
@@ -273,12 +272,10 @@ body::before{
 }
 .flap-face{
   background:linear-gradient(178deg, var(--paper) 0%, var(--paper-2) 58%, var(--paper-3) 100%);
-  /* drop-shadow follows the clipped silhouette, so the diagonals get a cut edge */
   filter:
     drop-shadow(0 1px 0 rgba(255,255,255,.75))
     drop-shadow(0 -1px 0 rgba(120,96,58,.22));
 }
-/* lace liner, built from gradients so there are no image files */
 .flap-liner{
   transform:rotateX(180deg);
   background-color:var(--ink-2);
@@ -291,7 +288,6 @@ body::before{
   background-position:0 0, 10px 10px, 0 0, 20px 20px;
 }
 
-/* the shadow the closed flap casts onto the envelope face */
 .flap-shadow{
   position:absolute;
   top:0; left:0;
@@ -314,7 +310,6 @@ body::before{
   width:56px; height:56px;
   margin:-28px 0 0 -28px;
   z-index:6;
-  /* uneven radii so it isn't a perfect circle */
   border-radius:49% 51% 53% 47% / 52% 47% 53% 48%;
   background:radial-gradient(circle at 34% 27%, #D2B47F 0%, var(--gold) 32%, #8A6F44 76%, #6B5433 100%);
   box-shadow:
@@ -329,7 +324,7 @@ body::before{
 .seal span{
   font-family:var(--display);
   font-style:italic;
-  font-size:1.15rem;
+  font-size:1.25rem;
   color:#493719;
   text-shadow:0 1px 0 rgba(255,242,214,.40), 0 -1px 1px rgba(40,28,8,.5);
 }
@@ -339,16 +334,17 @@ body::before{
 .prompt{
   position:relative;
   z-index:2;
-  margin-top:36px;
-  font-size:.64rem;
-  letter-spacing:.36em;
+  margin-top:38px;
+  font-size:.875rem;
+  letter-spacing:.22em;
   text-transform:uppercase;
   color:var(--mute);
   animation:breathe 3.6s ease-in-out infinite;
   transition:opacity .4s ease;
 }
+/* the dim half of the pulse still clears 4.5:1 */
 @keyframes breathe{
-  0%,100%{opacity:.5}
+  0%,100%{opacity:.78}
   50%{opacity:1}
 }
 .is-open .prompt{opacity:0; animation:none}
@@ -373,7 +369,6 @@ body::before{
   pointer-events:auto;
 }
 
-/* lace header band — replace the background with the real photograph */
 .band{
   position:relative;
   height:46svh;
@@ -393,37 +388,50 @@ body::before{
   text-align:center;
   padding:24px;
 }
-/* scalloped lace edge along the bottom */
+
+/* Scrim. Text over photography has unpredictable contrast, so it
+   sits on a guaranteed dark layer instead of on the image itself.
+   This keeps AA when the real lace photograph replaces the gradient. */
+.band::before{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(10,10,10,.55), rgba(10,10,10,.72));
+}
+.band > *{position:relative; z-index:1}
+
 .band::after{
   content:"";
   position:absolute;
   left:0; right:0;
   bottom:-1px;
   height:15px;
+  z-index:2;
   background-image:radial-gradient(circle at 11px 15px, var(--ink) 9.5px, transparent 10px);
   background-size:22px 15px;
   background-repeat:repeat-x;
 }
-.band .eyebrow{margin-bottom:14px}
+
+.band .eyebrow{color:var(--on-band); margin-bottom:16px}
 .band-names{
   font-family:var(--display);
   font-style:italic;
   font-weight:400;
   font-size:clamp(1.9rem, 8.4vw, 2.7rem);
   line-height:1.16;
+  color:var(--on-dark);
 }
 .band-names .amp{
   display:block;
   font-size:.56em;
   margin:4px 0;
-  color:var(--gold);
+  color:var(--gold);        /* large text — 3:1 threshold, passes */
 }
 .band-date{
-  font-size:.66rem;
-  letter-spacing:.34em;
+  font-size:.875rem;
+  letter-spacing:.24em;
   text-transform:uppercase;
-  color:#CFC7B9;
-  margin-top:18px;
+  color:var(--on-band);
+  margin-top:20px;
 }
 
 .monogram{
@@ -435,18 +443,29 @@ body::before{
   place-items:center;
   font-family:var(--display);
   font-style:italic;
-  font-size:1.05rem;
+  font-size:1.125rem;
 }
 
-.where{text-align:center; padding:24px 24px 0}
-.where-time{font-style:italic; font-size:1.15rem; color:#E7E0D4; margin-bottom:14px}
-.where-venue{font-size:.72rem; letter-spacing:.32em; text-transform:uppercase; margin-bottom:8px}
-.where-addr{font-size:.9rem; color:var(--mute)}
+.where{text-align:center; padding:26px 24px 0}
+.where-time{
+  font-style:italic;
+  font-size:1.25rem;
+  color:var(--on-dark);
+  margin-bottom:16px;
+}
+.where-venue{
+  font-size:.875rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--on-dark);
+  margin-bottom:10px;
+}
+.where-addr{font-size:1rem; color:var(--mute)}
 
 .count{
   display:flex;
   justify-content:center;
-  gap:clamp(14px, 5vw, 30px);
+  gap:clamp(12px, 4.5vw, 28px);
   padding:52px 20px 46px;
 }
 .count div{text-align:center}
@@ -455,10 +474,12 @@ body::before{
   font-family:var(--display);
   font-size:clamp(1.5rem, 7vw, 2.1rem);
   font-weight:400;
+  color:var(--on-dark);
+  margin-bottom:6px;
 }
 .count small{
-  font-size:.55rem;
-  letter-spacing:.28em;
+  font-size:.875rem;
+  letter-spacing:.16em;
   text-transform:uppercase;
   color:var(--mute);
 }
@@ -468,7 +489,7 @@ body::before{
   font-style:italic;
   color:var(--mute);
   padding:0 24px 64px;
-  font-size:1.05rem;
+  font-size:1.125rem;
 }
 
 /* ============================================================
@@ -480,15 +501,15 @@ body::before{
   left:50%;
   transform:translateX(-50%);
   z-index:40;
-  background:none;
-  border:1px solid rgba(139,133,123,.35);
+  background:var(--ink);
+  border:1px solid rgba(169,162,150,.4);
   border-radius:1px;
   color:var(--mute);
   font-family:var(--body);
-  font-size:.58rem;
-  letter-spacing:.24em;
+  font-size:.875rem;
+  letter-spacing:.2em;
   text-transform:uppercase;
-  padding:8px 14px;
+  padding:9px 16px;
   cursor:pointer;
 }
 
