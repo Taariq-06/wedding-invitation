@@ -314,6 +314,8 @@ body::before {
   text-transform: uppercase;
   font-weight: 500;
   color: var(--gold-ink);
+  font-family: var(--body);
+  font-weight: bold;
 }
 .is-open .crest {
   opacity: 0;
