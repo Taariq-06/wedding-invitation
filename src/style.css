@@ -5,42 +5,42 @@
    AA: 4.5:1 normal, 3:1 large. Type floor 14px.
 
    THE RULE: gold changes job with its ground.
-   On ivory it is ornament only. On the lace band it may carry text.
+   On ivory it is ornament only. Text gold is --gold-ink.
+
+   LAYERS (shared by both pages)
+     0  lace imagery        page one corners / page two side frame
+     1  body::before        field: light pool, gradient, plaster, vignette
+     2  body::after         fine grain
+     3  page one content
+     20 page two content    (transparent — the field shows through)
    ============================================================ */
 :root {
-  --shell: #efe9e3; /* MUST match the lace image background */
+  --shell: #efe9e3;          /* MUST match the lace image background */
   --paper: #fdfbf7;
   --paper-2: #f7f2ea;
   --paper-3: #f1ebe0;
   --paper-back: #e9e1d6;
   --paper-back-2: #dfd5c6;
-  --liner: #dccfbe; /* MUST match lace-liner background */
+  --liner: #dccfbe;          /* MUST match lace-liner background */
 
   --lace: #1c1a17;
-  --lace-2: #282420;
 
-  --ink: #2e2a24; /* 11.3:1 on shell */
-  --ink-2: #585047; /* 6.2:1 on shell */
-  --on-lace: #f7f2ea;
+  --ink: #2e2a24;            /* 11.3:1 on shell */
+  --ink-2: #585047;          /* 6.2:1 on shell */
 
-  --gold: #b08d57; /* ORNAMENT ONLY */
-  --gold-ink: #6e5527; /* 5.1:1 on shell */
+  --gold: #b08d57;           /* ORNAMENT ONLY */
+  --gold-ink: #6e5527;       /* 5.1:1 on shell */
+
+  /* dress code */
+  --dc-champagne: #e6d5b8;
+  --dc-beige: #c9b096;
+  --dc-brown: #6b4f3a;
 
   --display: "Playfair Display", Georgia, "Times New Roman", serif;
   --body: "Cormorant Garamond", Georgia, serif;
   --script: "Pinyon Script", cursive;
 
-  --foil: linear-gradient(
-    100deg,
-    #8c6f3e 0%,
-    #e6cb93 20%,
-    #b08d57 38%,
-    #f2e1bb 54%,
-    #8c7346 74%,
-    #d3b888 100%
-  );
   --ease: cubic-bezier(0.16, 0.84, 0.3, 1);
-
   --shadow-contact: rgba(96, 74, 44, 0.2);
   --shadow-ambient: rgba(96, 74, 44, 0.24);
 
@@ -49,11 +49,7 @@
   --flap-h: 58%;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   min-height: 100svh;
@@ -71,12 +67,9 @@ body {
 }
 
 /* ============================================================
-   LAYER 0 — LACE CORNERS
-   The photograph's own background is --shell, so the opaque part
-   is indistinguishable from the page. The mask dissolves the
-   inner edges; without it you get a visible rectangle.
+   LAYER 0 — LACE
    ============================================================ */
-.lace {
+.lace, .edge {
   position: fixed;
   z-index: 0;
   pointer-events: none;
@@ -88,45 +81,57 @@ body {
     url("images/lace-corner.webp") type("image/webp"),
     url("images/lace-corner.jpg") type("image/jpeg")
   );
-  /* reaches further inward than before, so the texture travels
-     toward the centre instead of stopping at a hard edge */
-  -webkit-mask-image: radial-gradient(
-    125% 125% at 0% 0%,
-    #000 20%,
-    rgba(0, 0, 0, 0.62) 50%,
-    rgba(0, 0, 0, 0.22) 72%,
-    transparent 92%
-  );
-  mask-image: radial-gradient(
-    125% 125% at 0% 0%,
-    #000 20%,
-    rgba(0, 0, 0, 0.62) 50%,
-    rgba(0, 0, 0, 0.22) 72%,
-    transparent 92%
-  );
+  transition: opacity 0.9s ease;
 }
-.lace-tl {
-  top: -2vh;
-  left: -14vw;
-  width: 88vw;
-  height: 46vh;
+
+/* --- page one: opposing corners --- */
+.lace {
+  -webkit-mask-image: radial-gradient(125% 125% at 0% 0%, #000 20%, rgba(0,0,0,.62) 50%, rgba(0,0,0,.22) 72%, transparent 92%);
+  mask-image: radial-gradient(125% 125% at 0% 0%, #000 20%, rgba(0,0,0,.62) 50%, rgba(0,0,0,.22) 72%, transparent 92%);
 }
-/* rotating the element carries its mask round with it, so one
-   mask definition serves both corners */
+.lace-tl { top: -2vh; left: -14vw; width: 88vw; height: 46vh; }
 .lace-br {
-  bottom: -2vh;
-  right: -14vw;
-  width: 76vw;
-  height: 40vh;
+  bottom: -2vh; right: -14vw;
+  width: 76vw; height: 40vh;
   transform: rotate(180deg);
   opacity: 0.92;
 }
+/* page one's composition retires when page two arrives */
+.show-details .lace { opacity: 0; }
+
+/* --- page two: side frame ---
+   Different geometry from page one (vertical edges rather than
+   diagonal corners) so the pages feel related, not identical.
+   Fades inward, leaving a clear column for the content. */
+.edge {
+  top: 0;
+  height: 100svh;
+  width: 46vw;
+  opacity: 0;
+  -webkit-mask-image: linear-gradient(to right, #000 0%, rgba(0,0,0,.55) 46%, transparent 88%);
+  mask-image: linear-gradient(to right, #000 0%, rgba(0,0,0,.55) 46%, transparent 88%);
+}
+.edge-l { left: -12vw; }
+.edge-r { right: -12vw; transform: scaleX(-1); }
+.show-details .edge { opacity: 1; }
+
+/* hairline mount, like the mat around a framed print */
+.frame {
+  position: fixed;
+  inset: 13px;
+  z-index: 21;
+  pointer-events: none;
+  border: 1px solid rgba(110, 85, 39, 0.34);
+  opacity: 0;
+  transition: opacity 1s ease 0.3s;
+}
+.show-details .frame { opacity: 1; }
 
 /* ============================================================
    LAYER 1 — FIELD
    Sits ABOVE the lace and is translucent, so it tints the
    photograph and the page identically. Below it, the image's flat
-   background would not match the gradient and the rectangle
+   background would not match the gradient and its rectangle
    would reappear.
 
    The centre light pool does double duty: it gives the lit-plaster
@@ -140,34 +145,14 @@ body::before {
   z-index: 1;
   pointer-events: none;
   background:
-    /* centre light pool — also a contrast scrim */
-    radial-gradient(
-      74% 48% at 50% 47%,
-      rgba(255, 252, 248, 0.72) 0%,
-      rgba(255, 252, 248, 0.34) 42%,
-      rgba(255, 252, 248, 0) 74%
-    ),
-    /* light falling across the surface */
-    linear-gradient(
-        145deg,
-        rgba(255, 251, 246, 0.5) 0%,
-        rgba(255, 252, 247, 0.1) 46%,
-        rgba(208, 190, 166, 0.26) 100%
-      ),
-    /* mottled plaster — the mid-field texture. Sized 100% with no
-       repeat, so there are no tile seams to give it away. */
+    radial-gradient(74% 48% at 50% 47%,
+      rgba(255,252,248,.72) 0%, rgba(255,252,248,.34) 42%, rgba(255,252,248,0) 74%),
+    linear-gradient(145deg,
+      rgba(255,251,246,.5) 0%, rgba(255,252,247,.1) 46%, rgba(208,190,166,.26) 100%),
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='700'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='0.011' numOctaves='4' seed='11'/><feColorMatrix type='matrix' values='0 0 0 0 0.44  0 0 0 0 0.36  0 0 0 0 0.26  0.62 0 0 0 0'/></filter><rect width='700' height='700' filter='url(%23m)'/></svg>"),
-    /* vignette */
-    radial-gradient(
-        128% 94% at 50% 44%,
-        rgba(255, 255, 255, 0) 50%,
-        rgba(186, 168, 144, 0.26) 100%
-      );
-  background-size:
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%;
+    radial-gradient(128% 94% at 50% 44%,
+      rgba(255,255,255,0) 50%, rgba(186,168,144,.26) 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%;
   background-repeat: no-repeat;
 }
 
@@ -195,30 +180,42 @@ body::after {
   mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='0.55'/></svg>");
 }
-
-/* legible over --lace only. Never on ivory. */
-.foil {
-  background: var(--foil);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
 .press {
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.9),
-    0 -1px 0 rgba(70, 55, 30, 0.16);
+  text-shadow: 0 1px 0 rgba(255,255,255,.9), 0 -1px 0 rgba(70,55,30,.16);
 }
+
+/* ornamental divider — used on the envelope crest and page two */
+.orn, .crest-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+.orn i, .crest-rule i {
+  display: block;
+  width: 26px;
+  height: 1px;
+  background: var(--gold-ink);
+  opacity: 0.6;
+}
+.orn b, .crest-rule b {
+  font-size: 0.5rem;
+  font-weight: 400;
+  color: var(--gold-ink);
+  transform: rotate(45deg);
+  line-height: 1;
+}
+.orn { margin: 30px 0; }
+.orn i { width: 34px; }
 
 /* ============================================================
-   LAYER 3 — CONTENT
+   LAYER 3 — PAGE ONE
    ============================================================ */
 .intro {
   position: relative;
   z-index: 3;
   text-align: center;
-  transition:
-    opacity 0.7s ease,
-    transform 0.9s var(--ease);
+  transition: opacity .7s ease, transform .9s var(--ease);
 }
 .eyebrow {
   font-size: 0.875rem;
@@ -236,13 +233,8 @@ body::after {
   color: var(--ink);
   margin-bottom: 28px;
 }
-.is-open .intro {
-  opacity: 0;
-  transform: translateY(-16px);
-  pointer-events: none;
-}
+.is-open .intro { opacity: 0; transform: translateY(-16px); pointer-events: none; }
 
-/* ---------- stage ---------- */
 .stage {
   position: relative;
   z-index: 3;
@@ -250,9 +242,7 @@ body::after {
   height: var(--env-h);
   perspective: 1500px;
   perspective-origin: 50% 0%;
-  transition:
-    transform 1.5s var(--ease),
-    opacity 0.8s ease;
+  transition: transform 1.5s var(--ease), opacity .8s ease;
 }
 /* contact shadow — seats the envelope on a surface */
 .stage::after {
@@ -264,24 +254,13 @@ body::after {
   width: 86%;
   height: 30px;
   transform: translateX(-50%);
-  background: radial-gradient(
-    ellipse at center,
-    rgba(96, 74, 44, 0.26) 0%,
-    rgba(96, 74, 44, 0) 72%
-  );
+  background: radial-gradient(ellipse at center, rgba(96,74,44,.26) 0%, rgba(96,74,44,0) 72%);
   filter: blur(7px);
-  transition: opacity 0.8s ease;
+  transition: opacity .8s ease;
 }
-.is-open .stage {
-  transform: translateY(8vh);
-}
-.is-open .stage::after {
-  opacity: 0;
-}
-.is-gone .stage {
-  opacity: 0;
-  pointer-events: none;
-}
+.is-open .stage { transform: translateY(8vh); }
+.is-open .stage::after { opacity: 0; }
+.is-gone .stage { opacity: 0; pointer-events: none; }
 
 .envelope {
   position: absolute;
@@ -292,15 +271,10 @@ body::after {
   cursor: pointer;
   transform-style: preserve-3d;
   filter: drop-shadow(0 2px 3px var(--shadow-contact))
-    drop-shadow(0 26px 44px var(--shadow-ambient));
+          drop-shadow(0 26px 44px var(--shadow-ambient));
 }
-.envelope:focus-visible {
-  outline: 1px solid var(--gold-ink);
-  outline-offset: 16px;
-}
-.is-open .envelope {
-  cursor: default;
-}
+.envelope:focus-visible { outline: 1px solid var(--gold-ink); outline-offset: 16px; }
+.is-open .envelope { cursor: default; }
 
 .back {
   position: absolute;
@@ -310,7 +284,6 @@ body::after {
   background: linear-gradient(175deg, var(--paper-back), var(--paper-back-2));
 }
 
-/* ---------- the note ---------- */
 .card {
   position: absolute;
   left: 6%;
@@ -321,68 +294,37 @@ body::after {
   background: linear-gradient(168deg, var(--paper) 0%, var(--paper-2) 100%);
   border-radius: 1px;
   transform: translateY(0);
-  transition:
-    transform 1.5s var(--ease) 0.55s,
-    opacity 0.7s ease;
+  transition: transform 1.5s var(--ease) .55s, opacity .7s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 22px 18px;
   overflow: hidden;
-  box-shadow: 0 10px 22px rgba(96, 74, 44, 0.22);
+  box-shadow: 0 10px 22px rgba(96,74,44,.22);
 }
 .card-inner {
   position: relative;
   z-index: 1;
   opacity: 0;
   text-align: center;
-  transition: opacity 0.8s ease 1.1s;
+  transition: opacity .8s ease 1.1s;
 }
-.is-open .card {
-  transform: translateY(-78%);
-}
-.is-open .card-inner {
-  opacity: 1;
-}
-.card-lifted {
-  z-index: 5;
-}
-.card-out {
-  opacity: 0;
-  transform: translateY(-84%) scale(1.06);
-}
+.is-open .card { transform: translateY(-78%); }
+.is-open .card-inner { opacity: 1; }
+.card-lifted { z-index: 5; }
+.card-out { opacity: 0; transform: translateY(-84%) scale(1.06); }
 
-.card-mono {
-  width: 66px;
-  height: 66px;
-  margin: 0 auto;
-  border: 1px solid rgba(110, 85, 39, 0.45);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-family: var(--display);
-  font-style: italic;
-  font-size: 1.125rem;
-  letter-spacing: 0.04em;
-  color: var(--gold-ink);
-}
 .card-script {
   font-family: var(--script);
   font-size: clamp(2rem, 8vw, 2.6rem);
   color: var(--ink);
 }
 
-/* ---------- front pocket ---------- */
 .front {
   position: absolute;
   inset: 0;
   z-index: 3;
-  background: linear-gradient(
-    166deg,
-    var(--paper) 0%,
-    var(--paper-2) 74%,
-    var(--paper-3) 100%
-  );
+  background: linear-gradient(166deg, var(--paper) 0%, var(--paper-2) 74%, var(--paper-3) 100%);
   clip-path: polygon(0 28%, 50% 45%, 100% 28%, 100% 100%, 0 100%);
   border-radius: 0 0 2px 2px;
 }
@@ -390,15 +332,10 @@ body::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(96, 74, 44, 0.18),
-    rgba(96, 74, 44, 0) 20%
-  );
+  background: linear-gradient(180deg, rgba(96,74,44,.18), rgba(96,74,44,0) 20%);
   clip-path: polygon(0 28%, 50% 45%, 100% 28%, 100% 100%, 0 100%);
 }
 
-/* ---------- crest ---------- */
 .crest {
   position: absolute;
   z-index: 4;
@@ -406,29 +343,9 @@ body::after {
   right: 0;
   top: 74%;
   text-align: center;
-  transition: opacity 0.5s ease;
+  transition: opacity .5s ease;
 }
-.crest-rule {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  margin-bottom: 7px;
-}
-.crest-rule i {
-  display: block;
-  width: 26px;
-  height: 1px;
-  background: var(--gold-ink);
-  opacity: 0.6;
-}
-.crest-rule b {
-  font-size: 0.5rem;
-  font-weight: 400;
-  color: var(--gold-ink);
-  transform: rotate(45deg);
-  line-height: 1;
-}
+.crest-rule { margin-bottom: 7px; }
 .crest-name {
   font-size: 0.875rem;
   font-family: var(--body);
@@ -437,11 +354,8 @@ body::after {
   font-weight: 500;
   color: var(--gold-ink);
 }
-.is-open .crest {
-  opacity: 0;
-}
+.is-open .crest { opacity: 0; }
 
-/* ---------- flap ---------- */
 .flap {
   position: absolute;
   top: 0;
@@ -453,35 +367,22 @@ body::after {
   transition: transform 1.5s var(--ease);
   z-index: 4;
 }
-.is-open .flap {
-  transform: rotateX(-173deg);
-}
-.flap-lowered {
-  z-index: 1;
-}
+.is-open .flap { transform: rotateX(-173deg); }
+.flap-lowered { z-index: 1; }
 
-.flap-face,
-.flap-liner {
+.flap-face, .flap-liner {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
 }
-
 /* the two faces are mirror images: the liner is flipped 180deg
    about its own centre, so its clip-path must be inverted too */
 .flap-face {
   clip-path: polygon(0 0, 100% 0, 50% 100%);
-  background: linear-gradient(
-    178deg,
-    var(--paper) 0%,
-    var(--paper-2) 58%,
-    var(--paper-3) 100%
-  );
-  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.85))
-    drop-shadow(0 -1px 0 rgba(120, 96, 58, 0.2));
+  background: linear-gradient(178deg, var(--paper) 0%, var(--paper-2) 58%, var(--paper-3) 100%);
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,.85))
+          drop-shadow(0 -1px 0 rgba(120,96,58,.2));
 }
-/* real lace, in champagne — deep enough to read against the ivory
-   flap face, light enough to belong to the palette */
 .flap-liner {
   clip-path: polygon(0 100%, 100% 100%, 50% 0);
   transform: rotateX(180deg);
@@ -494,16 +395,11 @@ body::after {
   background-size: cover;
   background-position: center;
 }
-/* shading so the liner reads as the underside of a fold */
 .flap-liner::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    0deg,
-    rgba(120, 96, 58, 0.26),
-    rgba(120, 96, 58, 0) 55%
-  );
+  background: linear-gradient(0deg, rgba(120,96,58,.26), rgba(120,96,58,0) 55%);
 }
 
 .flap-shadow {
@@ -514,16 +410,13 @@ body::after {
   height: var(--flap-h);
   z-index: 3;
   clip-path: polygon(0 0, 100% 0, 50% 100%);
-  background: rgba(96, 74, 44, 0.3);
+  background: rgba(96,74,44,.3);
   filter: blur(7px);
   transform: translateY(5px);
-  transition: opacity 0.55s ease;
+  transition: opacity .55s ease;
 }
-.is-open .flap-shadow {
-  opacity: 0;
-}
+.is-open .flap-shadow { opacity: 0; }
 
-/* ---------- wax seal ---------- */
 .seal {
   position: absolute;
   left: 50%;
@@ -533,22 +426,14 @@ body::after {
   transform: translate(-50%, -50%) rotate(-7deg);
   z-index: 6;
   border-radius: 49% 51% 53% 47% / 52% 47% 53% 48%;
-  background: radial-gradient(
-    circle at 34% 27%,
-    #d2b47f 0%,
-    var(--gold) 32%,
-    #8a6f44 76%,
-    #6b5433 100%
-  );
+  background: radial-gradient(circle at 34% 27%, #d2b47f 0%, var(--gold) 32%, #8a6f44 76%, #6b5433 100%);
   box-shadow:
-    inset 0 -2px 5px rgba(58, 42, 18, 0.6),
-    inset 0 2px 4px rgba(255, 238, 204, 0.42),
-    0 4px 10px rgba(74, 54, 26, 0.45);
+    inset 0 -2px 5px rgba(58,42,18,.6),
+    inset 0 2px 4px rgba(255,238,204,.42),
+    0 4px 10px rgba(74,54,26,.45);
   display: grid;
   place-items: center;
-  transition:
-    opacity 0.6s ease 0.15s,
-    transform 0.9s var(--ease) 0.15s;
+  transition: opacity .6s ease .15s, transform .9s var(--ease) .15s;
 }
 .seal span {
   font-family: var(--display);
@@ -557,16 +442,10 @@ body::after {
   letter-spacing: 0.06em;
   color: #493719;
   /* inverted from .press — pressed INTO the wax, not raised off it */
-  text-shadow:
-    0 1px 0 rgba(255, 242, 214, 0.4),
-    0 -1px 1px rgba(40, 28, 8, 0.5);
+  text-shadow: 0 1px 0 rgba(255,242,214,.4), 0 -1px 1px rgba(40,28,8,.5);
 }
-.is-open .seal {
-  opacity: 0;
-  transform: translate(-50%, -50%) rotate(-7deg) scale(1.55);
-}
+.is-open .seal { opacity: 0; transform: translate(-50%,-50%) rotate(-7deg) scale(1.55); }
 
-/* ---------- prompt ---------- */
 .prompt {
   position: relative;
   z-index: 3;
@@ -576,25 +455,20 @@ body::after {
   text-transform: uppercase;
   color: var(--ink-2);
   animation: breathe 3.6s ease-in-out infinite;
-  transition: opacity 0.4s ease;
+  transition: opacity .4s ease;
 }
 /* floors at .78 so the dim half of the pulse still clears 4.5:1 */
 @keyframes breathe {
-  0%,
-  100% {
-    opacity: 0.78;
-  }
-  50% {
-    opacity: 1;
-  }
+  0%, 100% { opacity: .78; }
+  50% { opacity: 1; }
 }
-.is-open .prompt {
-  opacity: 0;
-  animation: none;
-}
+.is-open .prompt { opacity: 0; animation: none; }
 
 /* ============================================================
-   DETAILS PAGE — recoloured, redesign still pending
+   PAGE TWO
+   Transparent, so the shared field and grain show through and the
+   two pages sit on the same surface. The lace changes geometry;
+   the material does not.
    ============================================================ */
 .details {
   position: fixed;
@@ -602,104 +476,220 @@ body::after {
   z-index: 20;
   overflow-y: auto;
   overscroll-behavior: contain;
-  background: var(--shell);
+  -webkit-overflow-scrolling: touch;
+  background: transparent;
   opacity: 0;
   transform: scale(1.035);
   pointer-events: none;
-  transition:
-    opacity 1.1s ease,
-    transform 1.4s var(--ease);
+  transition: opacity 1.1s ease, transform 1.4s var(--ease);
 }
-.show-details .details {
-  opacity: 1;
-  transform: scale(1);
-  pointer-events: auto;
-}
+.show-details .details { opacity: 1; transform: scale(1); pointer-events: auto; }
 
-.band {
-  position: relative;
-  height: 44svh;
-  min-height: 270px;
-  background-color: var(--lace);
-  background-image: url("images/lace-band.jpg");
-  background-image: image-set(
-    url("images/lace-band.webp") type("image/webp"),
-    url("images/lace-band.jpg") type("image/jpeg")
-  );
-  background-size: cover;
-  background-position: center bottom;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.sheet {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 12svh 26px 96px;
   text-align: center;
-  padding: 24px;
-}
-/* guarantees contrast over the photograph */
-.band::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(28, 26, 23, 0.62),
-    rgba(28, 26, 23, 0.48)
-  );
-}
-.band > * {
-  position: relative;
-  z-index: 1;
-}
-/* scallop cut-outs are the page colour — change --shell and this
-   has to change with it */
-.band::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 15px;
-  z-index: 2;
-  background-image: radial-gradient(
-    circle at 11px 15px,
-    var(--shell) 9.5px,
-    transparent 10px
-  );
-  background-size: 22px 15px;
-  background-repeat: repeat-x;
 }
 
-.band .eyebrow {
-  color: var(--on-lace);
-  margin-bottom: 16px;
+/* ---------- verse ---------- */
+.verse {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(1.2rem, 5.4vw, 1.5rem);
+  line-height: 1.4;
+  color: var(--ink);
 }
-.band-names {
+.verse-ref {
+  margin-top: 12px;
+  font-size: 0.875rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+
+/* ---------- names ---------- */
+.lede {
+  font-size: 0.9375rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1.9;
+  color: var(--ink-2);
+}
+.names {
   font-family: var(--display);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(1.9rem, 8.4vw, 2.7rem);
-  line-height: 1.16;
-  color: var(--on-lace);
+  font-size: clamp(2rem, 9vw, 2.9rem);
+  line-height: 1.14;
+  color: var(--ink);
+  margin: 20px 0;
 }
-.band-names .amp {
+.names .amp {
   display: block;
-  font-size: 0.56em;
+  font-family: var(--script);
+  font-style: normal;
+  font-size: 0.62em;
+  color: var(--gold-ink);
   margin: 4px 0;
-  color: var(--gold);
-}
-.band-date {
-  font-size: 0.875rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--on-lace);
-  margin-top: 20px;
 }
 
+/* ---------- date strip ----------
+   Three columns split by hairlines, the day large in the middle.
+   The strongest device in the reference invitation. */
+.datestrip {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: clamp(14px, 5vw, 26px);
+  margin: 34px auto 0;
+  max-width: 380px;
+}
+.ds-side {
+  font-size: 0.875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.ds-side:first-child { text-align: right; border-right: 1px solid rgba(110,85,39,.32); padding-right: clamp(14px,5vw,26px); }
+.ds-side:last-child { text-align: left; border-left: 1px solid rgba(110,85,39,.32); padding-left: clamp(14px,5vw,26px); }
+.ds-main b {
+  display: block;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 11vw, 3.1rem);
+  line-height: 1;
+  color: var(--ink);
+}
+.ds-main span {
+  display: block;
+  font-size: 0.875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-top: 5px;
+}
+
+/* ---------- venue ---------- */
+.venue { margin-top: 34px; }
+.pin { width: 20px; height: 20px; color: var(--gold-ink); margin-bottom: 10px; }
+.venue-name {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.venue-addr { font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+.link {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+  text-underline-offset: 5px;
+  padding: 6px 2px;
+}
+
+/* ---------- blocks ---------- */
+.block { margin-top: 46px; }
+.label {
+  font-size: 0.875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+  margin-bottom: 18px;
+}
+.note {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  max-width: 34ch;
+  margin: 0 auto;
+}
+.note.small {
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  margin-top: 14px;
+}
+
+/* countdown */
+.count {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.count div { text-align: center; }
+.count b {
+  display: block;
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 8vw, 2.2rem);
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.count small {
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* dress code — shows the palette rather than naming it */
+.swatches {
+  display: flex;
+  justify-content: center;
+  gap: clamp(18px, 7vw, 34px);
+}
+.sw {
+  font-size: 0.875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.chip {
+  display: block;
+  width: clamp(46px, 15vw, 58px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  box-shadow:
+    inset 0 -2px 5px rgba(74,54,26,.16),
+    0 3px 8px rgba(96,74,44,.2);
+}
+.chip-champagne { background: var(--dc-champagne); }
+.chip-beige { background: var(--dc-beige); }
+.chip-brown { background: var(--dc-brown); }
+
+/* rsvp */
+.btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 15px 30px;
+  min-height: 48px;
+  border: 1px solid rgba(110,85,39,.5);
+  border-radius: 1px;
+  background: rgba(253,251,247,.6);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 0.9375rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background .3s ease, border-color .3s ease;
+}
+.btn:hover, .btn:focus-visible {
+  background: rgba(253,251,247,.95);
+  border-color: var(--gold-ink);
+}
+
+/* closing */
 .monogram {
   width: 74px;
   height: 74px;
-  margin: 44px auto 0;
-  border: 1px solid rgba(110, 85, 39, 0.5);
+  margin: 56px auto 0;
+  border: 1px solid rgba(110,85,39,.5);
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -708,59 +698,12 @@ body::after {
   font-size: 1.125rem;
   color: var(--gold-ink);
 }
-
-.where {
-  text-align: center;
-  padding: 26px 24px 0;
-}
-.where-time {
-  font-style: italic;
-  font-size: 1.25rem;
-  color: var(--ink);
-  margin-bottom: 16px;
-}
-.where-venue {
-  font-size: 0.875rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ink);
-  margin-bottom: 10px;
-}
-.where-addr {
-  font-size: 1rem;
-  color: var(--ink-2);
-}
-
-.count {
-  display: flex;
-  justify-content: center;
-  gap: clamp(12px, 4.5vw, 28px);
-  padding: 52px 20px 46px;
-}
-.count div {
-  text-align: center;
-}
-.count b {
-  display: block;
-  font-family: var(--display);
-  font-size: clamp(1.5rem, 7vw, 2.1rem);
-  font-weight: 400;
-  color: var(--ink);
-  margin-bottom: 6px;
-}
-.count small {
-  font-size: 0.875rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-}
-
 .closing {
-  text-align: center;
+  margin-top: 22px;
+  font-family: var(--display);
   font-style: italic;
-  color: var(--ink-2);
-  padding: 0 24px 64px;
   font-size: 1.125rem;
+  color: var(--ink-2);
 }
 
 /* ============================================================
@@ -773,7 +716,7 @@ body::after {
   transform: translateX(-50%);
   z-index: 40;
   background: var(--shell);
-  border: 1px solid rgba(88, 80, 71, 0.4);
+  border: 1px solid rgba(88,80,71,.4);
   border-radius: 1px;
   color: var(--ink-2);
   font-family: var(--body);
@@ -786,33 +729,19 @@ body::after {
 
 /* ============================================================
    LARGER SCREENS
-   Mobile is the base. Desktop scales up from it.
    ============================================================ */
 @media (min-width: 641px) {
-  :root {
-    --env-w: clamp(300px, 34vmin, 460px);
-  }
-  body {
-    padding: 48px 20px;
-  }
-  .lace-tl {
-    top: -5vh;
-    left: -6vw;
-    width: 44vw;
-    height: 86vh;
-  }
-  .lace-br {
-    bottom: -5vh;
-    right: -6vw;
-    width: 32vw;
-    height: 64vh;
-  }
-  .intro-names {
-    margin-bottom: 34px;
-  }
-  .prompt {
-    margin-top: 32px;
-  }
+  :root { --env-w: clamp(300px, 34vmin, 460px); }
+  body { padding: 48px 20px; }
+  .lace-tl { top: -5vh; left: -6vw; width: 44vw; height: 86vh; }
+  .lace-br { bottom: -5vh; right: -6vw; width: 32vw; height: 64vh; }
+  .edge { width: 30vw; }
+  .edge-l { left: -4vw; }
+  .edge-r { right: -4vw; }
+  .frame { inset: 22px; }
+  .intro-names { margin-bottom: 34px; }
+  .prompt { margin-top: 32px; }
+  .sheet { padding: 14svh 26px 110px; }
 }
 
 /* ============================================================

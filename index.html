@@ -13,9 +13,14 @@
 </head>
 <body>
 
-  <!-- ===== lace corners (decorative) ===== -->
+  <!-- ===== page one lace: opposing corners ===== -->
   <div class="lace lace-tl" aria-hidden="true"></div>
   <div class="lace lace-br" aria-hidden="true"></div>
+
+  <!-- ===== page two lace: side frame ===== -->
+  <div class="edge edge-l" aria-hidden="true"></div>
+  <div class="edge edge-r" aria-hidden="true"></div>
+  <div class="frame" aria-hidden="true"></div>
 
   <!-- ===== intro ===== -->
   <div class="intro">
@@ -26,28 +31,22 @@
   <!-- ===== envelope ===== -->
   <div class="stage">
     <button class="envelope" id="envelope" aria-label="Open the invitation">
-
-      <!-- inside of the envelope -->
       <div class="back"></div>
 
-      <!-- the note that rises out -->
       <div class="card grain" id="card">
         <div class="card-inner">
           <p class="card-script">You&rsquo;re Invited</p>
         </div>
       </div>
 
-      <!-- front pocket, and the shadow the flap casts on it -->
       <div class="front grain"></div>
       <div class="flap-shadow"></div>
 
-      <!-- engraved crest on the envelope face -->
       <div class="crest">
         <div class="crest-rule"><i></i><b>&#9670;</b><i></i></div>
         <div class="crest-name">Wedding Invitation</div>
       </div>
 
-      <!-- flap: ivory outer face, lace liner underneath -->
       <div class="flap" id="flap">
         <div class="flap-face grain"></div>
         <div class="flap-liner"></div>
@@ -59,32 +58,93 @@
 
   <p class="prompt">Tap envelope to open</p>
 
-  <!-- ===== details page ===== -->
+  <!-- ===== page two ===== -->
   <div class="details" id="details">
+    <div class="sheet">
 
-    <div class="band">
-      <p class="eyebrow">Save our date</p>
-      <h2 class="band-names">Imaan Frank<span class="amp">&amp;</span>Aziz Charles</h2>
-      <p class="band-date">19 December 2026</p>
+      <p class="verse">And We created you in pairs</p>
+      <p class="verse-ref">Quran 78:8</p>
+
+      <div class="orn"><i></i><b>&#9670;</b><i></i></div>
+
+      <p class="lede">Together with their families</p>
+
+      <h2 class="names">
+        Imaan Frank
+        <span class="amp">and</span>
+        Aziz Charles
+      </h2>
+
+      <p class="lede">invite you to celebrate<br>the beginning of their forever</p>
+
+      <!-- date -->
+      <div class="datestrip">
+        <div class="ds-side"><span>Saturday</span></div>
+        <div class="ds-main">
+          <b>19</b>
+          <span>December</span>
+          <span>2026</span>
+        </div>
+        <div class="ds-side"><span>6:30 PM</span></div>
+      </div>
+
+      <!-- venue -->
+      <div class="venue">
+        <svg class="pin" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"
+                fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="12" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        <p class="venue-name">Terrace Rooftop</p>
+        <p class="venue-addr">12 Kremer Rd, Salt River<br>Cape Town</p>
+        <a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=12+Kremer+Rd+Salt+River+Cape+Town"
+           target="_blank" rel="noopener">View on map</a>
+      </div>
+
+      <div class="orn"><i></i><b>&#9670;</b><i></i></div>
+
+      <!-- countdown -->
+      <section class="block">
+        <p class="label">Counting down</p>
+        <div class="count">
+          <div><b id="d">&mdash;</b><small>Days</small></div>
+          <div><b id="h">&mdash;</b><small>Hours</small></div>
+          <div><b id="m">&mdash;</b><small>Minutes</small></div>
+          <div><b id="s">&mdash;</b><small>Seconds</small></div>
+        </div>
+      </section>
+
+      <!-- dress code -->
+      <section class="block">
+        <p class="label">Dress code</p>
+        <div class="swatches">
+          <div class="sw"><span class="chip chip-champagne"></span>Champagne</div>
+          <div class="sw"><span class="chip chip-beige"></span>Beige</div>
+          <div class="sw"><span class="chip chip-brown"></span>Brown</div>
+        </div>
+      </section>
+
+      <!-- rsvp -->
+      <section class="block">
+        <p class="label">RSVP</p>
+        <p class="note">Kindly respond by 31 October 2026</p>
+        <a class="btn"
+           href="https://wa.me/27820000000?text=Hi%2C%20I%27d%20like%20to%20RSVP%20for%20Imaan%20%26%20Aziz%27s%20wedding."
+           target="_blank" rel="noopener">Message us on WhatsApp</a>
+        <p class="note small">082 000 0000</p>
+      </section>
+
+      <!-- registry -->
+      <section class="block">
+        <p class="label">Gift registry</p>
+        <p class="note">Your presence on the day is the greatest gift of all. Should you wish to give something more, a gift card or a contribution towards our new home would be warmly received.</p>
+        <p class="note small">Canal Walk &middot; Cavendish Square &middot; @home</p>
+      </section>
+
+      <div class="monogram">I &amp; A</div>
+      <p class="closing">We can&rsquo;t wait to celebrate with you</p>
+
     </div>
-
-    <div class="monogram">I &amp; A</div>
-
-    <div class="where">
-      <p class="where-time">six thirty pm</p>
-      <p class="where-venue">Terrace Rooftop</p>
-      <p class="where-addr">12 Kremer Rd, Salt River, Cape Town</p>
-    </div>
-
-    <div class="count">
-      <div><b id="d">&mdash;</b><small>Days</small></div>
-      <div><b id="h">&mdash;</b><small>Hours</small></div>
-      <div><b id="m">&mdash;</b><small>Minutes</small></div>
-      <div><b id="s">&mdash;</b><small>Seconds</small></div>
-    </div>
-
-    <p class="closing">We can&rsquo;t wait to celebrate with you</p>
-
   </div>
 
   <button class="replay" id="replay">Replay</button>
