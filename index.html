@@ -1,92 +1,94 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Imaan &amp; Aziz</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Imaan &amp; Aziz</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap"
-      rel="stylesheet"
-    />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="./src/style.css" />
-  </head>
-  <body>
-    <!-- ===== intro ===== -->
-    <div class="intro">
-      <p class="eyebrow">You&rsquo;ve got mail from</p>
-      <h1 class="intro-names">Imaan &amp; Aziz</h1>
-    </div>
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
 
-    <!-- ===== envelope ===== -->
-    <div class="stage">
-      <button class="envelope" id="envelope" aria-label="Open the invitation">
-        <!-- inside of the envelope -->
-        <div class="back"></div>
+  <!-- ===== lace corners (decorative) ===== -->
+  <div class="lace lace-tl" aria-hidden="true"></div>
+  <div class="lace lace-br" aria-hidden="true"></div>
 
-        <!-- the note that rises out -->
-        <div class="card grain" id="card">
-          <div class="card-inner">
-            <div class="card-mono">I &amp; A</div>
-            <!-- alternative: <p class="card-script">You&rsquo;re Invited</p> -->
-          </div>
+  <!-- ===== intro ===== -->
+  <div class="intro">
+    <p class="eyebrow">You&rsquo;ve got mail from</p>
+    <h1 class="intro-names">Imaan &amp; Aziz</h1>
+  </div>
+
+  <!-- ===== envelope ===== -->
+  <div class="stage">
+    <button class="envelope" id="envelope" aria-label="Open the invitation">
+
+      <!-- inside of the envelope -->
+      <div class="back"></div>
+
+      <!-- the note that rises out -->
+      <div class="card grain" id="card">
+        <div class="card-inner">
+          <p class="card-script">You&rsquo;re Invited</p>
         </div>
-
-        <!-- front pocket, and the shadow the flap casts on it -->
-        <div class="front grain"></div>
-        <div class="flap-shadow"></div>
-
-        <!-- engraved crest on the envelope face -->
-        <div class="crest">
-          <div class="crest-rule"><i></i><b>&#9670;</b><i></i></div>
-          <div class="crest-name">Wedding Invitation</div>
-        </div>
-
-        <!-- flap: ivory outer face, lace liner underneath -->
-        <div class="flap" id="flap">
-          <div class="flap-face grain"></div>
-          <div class="flap-liner"></div>
-        </div>
-
-        <div class="seal"><span>&amp;</span></div>
-      </button>
-    </div>
-
-    <p class="prompt">Tap envelope to open</p>
-
-    <!-- ===== details page ===== -->
-    <div class="details" id="details">
-      <div class="band">
-        <p class="eyebrow">Save our date</p>
-        <h2 class="band-names">
-          Imaan Frank<span class="amp">&amp;</span>Aziz Charles
-        </h2>
-        <p class="band-date">19 December 2026</p>
       </div>
 
-      <div class="monogram foil">I &amp; A</div>
+      <!-- front pocket, and the shadow the flap casts on it -->
+      <div class="front grain"></div>
+      <div class="flap-shadow"></div>
 
-      <div class="where">
-        <p class="where-time">six thirty pm</p>
-        <p class="where-venue">Terrace Rooftop</p>
-        <p class="where-addr">12 Kremer Rd, Salt River, Cape Town</p>
+      <!-- engraved crest on the envelope face -->
+      <div class="crest">
+        <div class="crest-rule"><i></i><b>&#9670;</b><i></i></div>
+        <div class="crest-name">Wedding Invitation</div>
       </div>
 
-      <div class="count">
-        <div><b id="d">&mdash;</b><small>Days</small></div>
-        <div><b id="h">&mdash;</b><small>Hours</small></div>
-        <div><b id="m">&mdash;</b><small>Minutes</small></div>
-        <div><b id="s">&mdash;</b><small>Seconds</small></div>
+      <!-- flap: ivory outer face, lace liner underneath -->
+      <div class="flap" id="flap">
+        <div class="flap-face grain"></div>
+        <div class="flap-liner"></div>
       </div>
 
-      <p class="closing">We can&rsquo;t wait to celebrate with you</p>
+      <div class="seal"><span>I&amp;A</span></div>
+    </button>
+  </div>
+
+  <p class="prompt">Tap envelope to open</p>
+
+  <!-- ===== details page ===== -->
+  <div class="details" id="details">
+
+    <div class="band">
+      <p class="eyebrow">Save our date</p>
+      <h2 class="band-names">Imaan Frank<span class="amp">&amp;</span>Aziz Charles</h2>
+      <p class="band-date">19 December 2026</p>
     </div>
 
-    <button class="replay" id="replay">Replay</button>
+    <div class="monogram">I &amp; A</div>
 
-    <script src="./src/main.js"></script>
-  </body>
+    <div class="where">
+      <p class="where-time">six thirty pm</p>
+      <p class="where-venue">Terrace Rooftop</p>
+      <p class="where-addr">12 Kremer Rd, Salt River, Cape Town</p>
+    </div>
+
+    <div class="count">
+      <div><b id="d">&mdash;</b><small>Days</small></div>
+      <div><b id="h">&mdash;</b><small>Hours</small></div>
+      <div><b id="m">&mdash;</b><small>Minutes</small></div>
+      <div><b id="s">&mdash;</b><small>Seconds</small></div>
+    </div>
+
+    <p class="closing">We can&rsquo;t wait to celebrate with you</p>
+
+  </div>
+
+  <button class="replay" id="replay">Replay</button>
+
+  <script src="./src/main.js"></script>
+</body>
 </html>
