@@ -83,10 +83,10 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top left;
-  background-image: url("assets/lace-corner.jpg");
+  background-image: url("images/lace-corner.jpg");
   background-image: image-set(
-    url("assets/lace-corner.webp") type("image/webp"),
-    url("assets/lace-corner.jpg") type("image/jpeg")
+    url("images/lace-corner.webp") type("image/webp"),
+    url("images/lace-corner.jpg") type("image/jpeg")
   );
   /* reaches further inward than before, so the texture travels
      toward the centre instead of stopping at a hard edge */
@@ -486,10 +486,10 @@ body::after {
   clip-path: polygon(0 100%, 100% 100%, 50% 0);
   transform: rotateX(180deg);
   background-color: var(--liner);
-  background-image: url("assets/lace-liner.jpg");
+  background-image: url("images/lace-liner.jpg");
   background-image: image-set(
-    url("assets/lace-liner.webp") type("image/webp"),
-    url("assets/lace-liner.jpg") type("image/jpeg")
+    url("images/lace-liner.webp") type("image/webp"),
+    url("images/lace-liner.jpg") type("image/jpeg")
   );
   background-size: cover;
   background-position: center;
@@ -621,10 +621,10 @@ body::after {
   height: 44svh;
   min-height: 270px;
   background-color: var(--lace);
-  background-image: url("assets/lace-band.jpg");
+  background-image: url("images/lace-band.jpg");
   background-image: image-set(
-    url("assets/lace-band.webp") type("image/webp"),
-    url("assets/lace-band.jpg") type("image/jpeg")
+    url("images/lace-band.webp") type("image/webp"),
+    url("images/lace-band.jpg") type("image/jpeg")
   );
   background-size: cover;
   background-position: center bottom;
