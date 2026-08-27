@@ -482,14 +482,6 @@ body::after {
 .crest-rule {
   margin-bottom: 7px;
 }
-.crest-name {
-  font-size: 0.875rem;
-  font-family: var(--body);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-weight: 500;
-  color: var(--gold-ink);
-}
 .is-open .crest {
   opacity: 0;
 }
