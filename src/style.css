@@ -842,12 +842,6 @@ body::after {
   margin-bottom: 14px;
 }
 
-.sw {
-  font-size: 0.875rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-}
 .chip {
   width: clamp(44px, 14vw, 54px);
   aspect-ratio: 1;

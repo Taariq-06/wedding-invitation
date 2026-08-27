@@ -20,7 +20,6 @@ const envelope = document.getElementById('envelope');
 const flap     = document.getElementById('flap');
 const card     = document.getElementById('card');
 const details  = document.getElementById('details');
-const replay   = document.getElementById('replay');
 
 // Every setTimeout gets stored so Replay can cancel them mid-sequence.
 let timers = [];
@@ -51,20 +50,6 @@ function openEnvelope() {
     body.classList.add('show-details', 'is-gone');
   }, HANDOVER));
 }
-
-
-/* ---------- reset (development only) ---------- */
-
-function reset() {
-  timers.forEach(clearTimeout);
-  timers = [];
-
-  body.classList.remove('is-open', 'show-details', 'is-gone');
-  flap.classList.remove('flap-lowered');
-  card.classList.remove('card-lifted', 'card-out');
-  details.scrollTop = 0;
-}
-
 
 /* ---------- countdown ---------- */
 
@@ -100,7 +85,6 @@ function tick() {
 /* ---------- wiring ---------- */
 
 envelope.addEventListener('click', openEnvelope);
-replay.addEventListener('click', reset);
 
 tick();
 setInterval(tick, 1000);
